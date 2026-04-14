@@ -950,38 +950,47 @@
     </div>
 
     <!-- ═══════════════ CONTACT PAGE ═══════════════ -->
-<div id="page-contact" class="page">
-  <div class="page-hero">
-    <h1>Contact <span>Us</span></h1>
-  </div>
+    <div id="page-contact" class="page">
+        <div class="page-hero">
+            <h1>Contact <span>Us</span></h1>
+        </div>
 
-  <div class="contact-wrap">
+        <div class="contact-wrap">
 
-    <!-- LEFT SIDE -->
-    <div class="contact-info">
-      <h3>Let's Plan Your Dream Trip</h3>
-      <p>Have a destination in mind? Want a custom package? Our travel experts are ready to help you — just reach out!</p>
+            <!-- LEFT SIDE -->
+            <div class="contact-info">
+                <h3>Let's Plan Your Dream Trip</h3>
+                <p>Have a destination in mind? Want a custom package? Our travel experts are ready to help you — just
+                    reach out!</p>
 
-      <div class="info-row"><span class="ico">📍</span><div><span>Address</span><strong>Mumbai, Maharashtra, India</strong></div></div>
-      <div class="info-row"><span class="ico">📞</span><div><span>Phone</span><strong>+91 98765 43210</strong></div></div>
-      <div class="info-row"><span class="ico">📧</span><div><span>Email</span><strong>hello@triptravvy.in</strong></div></div>
-      <div class="info-row"><span class="ico">🌐</span><div><span>Website</span><strong>www.triptravvy.in</strong></div></div>
+                <div class="info-row"><span class="ico">📍</span>
+                    <div><span>Address</span><strong>Mumbai, Maharashtra, India</strong></div>
+                </div>
+                <div class="info-row"><span class="ico">📞</span>
+                    <div><span>Phone</span><strong>+91 98765 43210</strong></div>
+                </div>
+                <div class="info-row"><span class="ico">📧</span>
+                    <div><span>Email</span><strong>hello@triptravvy.in</strong></div>
+                </div>
+                <div class="info-row"><span class="ico">🌐</span>
+                    <div><span>Website</span><strong>www.triptravvy.in</strong></div>
+                </div>
+            </div>
+
+            <!-- ✅ FIXED FORM -->
+            <form onsubmit="submitForm(event)">
+                <input type="text" placeholder="Your Full Name" required />
+                <input type="email" placeholder="Your Email Address" required />
+                <input type="tel" placeholder="Your Phone Number" />
+                <input type="text" placeholder="Interested Destination (e.g. Thailand)" />
+                <textarea placeholder="Tell us about your travel plans…"></textarea>
+                <button type="submit" class="btn-submit">Send Enquiry ✈️</button>
+            </form>
+
+        </div>
+
+        <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
     </div>
-
-    <!-- ✅ FIXED FORM -->
-    <form onsubmit="submitForm(event)">
-      <input type="text" placeholder="Your Full Name" required />
-      <input type="email" placeholder="Your Email Address" required />
-      <input type="tel" placeholder="Your Phone Number" />
-      <input type="text" placeholder="Interested Destination (e.g. Thailand)" />
-      <textarea placeholder="Tell us about your travel plans…"></textarea>
-      <button type="submit" class="btn-submit">Send Enquiry ✈️</button>
-    </form>
-
-  </div>
-
-  <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
-</div>
 
     <!-- ═══════════════ BLOG PAGE ═══════════════ -->
     <div id="blog-page" class="page">
@@ -1093,41 +1102,41 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-       async function submitForm(e) {
-  e.preventDefault();
+        async function submitForm(e) {
+            e.preventDefault();
 
-  const inputs = e.target.querySelectorAll("input, textarea");
+            const inputs = e.target.querySelectorAll("input, textarea");
 
-  const data = {
-    name: inputs[0].value,
-    email: inputs[1].value,
-    phone: inputs[2].value,
-    destination: inputs[3].value,
-    message: inputs[4].value
-  };
+            const data = {
+                name: inputs[0].value,
+                email: inputs[1].value,
+                phone: inputs[2].value,
+                destination: inputs[3].value,
+                message: inputs[4].value
+            };
 
-  try {
-    const res = await fetch("http://localhost:5000/api/enquiry", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+            try {
+                const res = await fetch("https://triptravvy-backend.onrender.com/api/enquiry", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
 
-    const toast = document.getElementById('toast');
-    toast.innerText = "✅ Enquiry sent successfully!";
-    toast.classList.add('show');
+                const toast = document.getElementById('toast');
+                toast.innerText = "✅ Enquiry sent successfully!";
+                toast.classList.add('show');
 
-    setTimeout(() => toast.classList.remove('show'), 3000);
-    e.target.reset();
+                setTimeout(() => toast.classList.remove('show'), 3000);
+                e.target.reset();
 
-  } catch (err) {
-    alert("❌ Error sending enquiry");
-  }
-}
+            } catch (err) {
+                alert("❌ Error sending enquiry");
+            }
+        }
 
-        
+
     </script>
 </body>
 
