@@ -1,0 +1,22 @@
+{
+  "name": "almas-baji",
+  "version": "1.0.0",
+  "description": "TripTravvy Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mongoose": "^9.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1"
+  }
+}

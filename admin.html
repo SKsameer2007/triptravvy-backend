@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TripTravvy Admin</title>
+
+<style>
+:root {
+  --bg:#0D1117;
+  --card:#161B22;
+  --accent:#C9972A;
+  --text:#E6EDF3;
+  --muted:#8B949E;
+}
+
+body {
+  margin:0;
+  font-family:sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* LOGIN */
+#login {
+  display:flex;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+}
+.login-box {
+  background:var(--card);
+  padding:30px;
+  border-radius:12px;
+  width:320px;
+}
+input {
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  background:#0D1117;
+  border:1px solid #30363D;
+  color:white;
+  border-radius:8px;
+}
+
+/* BUTTON */
+button {
+  margin-top:15px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.primary { background:var(--accent); color:black; }
+.delete { background:red; color:white; }
+.logout { background:#444; color:white; }
+
+/* DASHBOARD */
+#dashboard {
+  display:none;
+  padding:30px;
+}
+
+/* HEADER */
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* CARDS */
+.stats {
+  display:flex;
+  gap:20px;
+  margin:20px 0;
+}
+.card {
+  background:var(--card);
+  padding:20px;
+  border-radius:12px;
+  flex:1;
+  text-align:center;
+}
+
+/* TABLE */
+table {
+  width:100%;
+  border-collapse:collapse;
+}
+th, td {
+  padding:10px;
+  border-bottom:1px solid #30363D;
+}
+th { color:var(--muted); }
+
+/* SEARCH */
+.search {
+  margin:15px 0;
+  padding:10px;
+  width:300px;
+  border-radius:8px;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button class="primary" onclick="login()">Login</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+
+  <div class="header">
+    <h1>📊 Admin Panel</h1>
+    <div>
+  <button onclick="loadData()">Refresh</button>
+  <button onclick="exportCSV()">Export</button>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="card">
+      <h2 id="count">0</h2>
+      <p>Total Enquiries</p>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <input class="search" placeholder="Search..." onkeyup="filterData(this.value)">
+
+  <!-- TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th><th>Email</th><th>Phone</th>
+        <th>Destination</th><th>Message</th><th>Date</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="data"></tbody>
+  </table>
+
+</div>
+
+<script>
+
+let token = null;
+let allData = [];
+
+// LOGIN
+async function login() {
+ const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+
+  const res = await fetch("http://localhost:5000/api/login", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    token = data.token;
+    localStorage.setItem("token", token);
+
+    document.getElementById("login").style.display = "none";
+document.getElementById("dashboard").style.display = "block";
+
+    loadData();
+  } else {
+    alert("Wrong login");
+  }
+}
+
+// LOAD DATA
+async function loadData() {
+  const res = await fetch("http://localhost:5000/api/enquiries", {
+    headers:{ "Authorization": localStorage.getItem("token") }
+  });
+
+  allData = await res.json();
+  renderTable(allData);
+}
+
+// RENDER TABLE
+function renderTable(data) {
+  count.innerText = data.length;
+
+  const table = document.getElementById("data");
+  table.innerHTML = "";
+
+  data.forEach(item => {
+    table.innerHTML += `
+      <tr>
+        <td>${item.name}</td>
+        <td>${item.email}</td>
+        <td>${item.phone}</td>
+        <td>${item.destination}</td>
+        <td>${item.message}</td>
+        <td>${new Date(item.date).toLocaleString()}</td>
+        <td>
+          <button class="delete" onclick="deleteItem('${item._id}')">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// SEARCH
+function filterData(value) {
+  const filtered = allData.filter(item =>
+    item.name.toLowerCase().includes(value.toLowerCase()) ||
+    item.email.toLowerCase().includes(value.toLowerCase())
+  );
+  renderTable(filtered);
+}
+
+// DELETE
+async function deleteItem(id) {
+  await fetch(`http://localhost:5000/api/enquiry/${id}`, {
+    method:"DELETE",
+    headers:{ "Authorization": localStorage.getItem("token") }
+  });
+  loadData();
+}
+
+// EXPORT CSV
+function exportCSV() {
+  let csv = "Name,Email,Phone,Destination,Message\n";
+
+  allData.forEach(i => {
+    csv += `${i.name},${i.email},${i.phone},${i.destination},${i.message}\n`;
+  });
+
+  const blob = new Blob([csv]);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "enquiries.csv";
+  a.click();
+}
+
+// LOGOUT
+function logout() {
+  localStorage.removeItem("token");
+  location.reload();
+}
+
+// AUTO LOGIN
+window.onload = () => {
+  const savedToken = localStorage.getItem("token");
+  if (savedToken) {
+    token = savedToken;
+    document.getElementById("login").style.display = "none";
+document.getElementById("dashboard").style.display = "block";
+    loadData();
+  }
+};
+
+</script>
+
+</body>
+</html>

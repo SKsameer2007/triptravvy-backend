@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripTravvy – Travel Beyond Limits</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C9972A;
+            --gold-light: #E8B84B;
+            --dark: #0D1117;
+            --darker: #080C11;
+            --card-bg: #131921;
+            --text: #F0EAD6;
+            --muted: #8A8070;
+            --accent: #2ABBC9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(8, 12, 17, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(201, 151, 42, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6vw;
+            height: 70px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--gold-light);
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+
+        .nav-links li a:hover,
+        .nav-links li a.active {
+            color: var(--gold-light);
+            background: rgba(201, 151, 42, 0.12);
+        }
+
+        /* ── PAGES ── */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── HOME PAGE ── */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(160deg, #080C11 0%, #111820 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 70% 50%, rgba(201, 151, 42, 0.07) 0%, transparent 65%),
+                radial-gradient(ellipse at 20% 80%, rgba(42, 187, 201, 0.05) 0%, transparent 55%);
+        }
+
+        .hero-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.8rem, 6vw, 5.5rem);
+            text-align: center;
+            line-height: 1.1;
+            z-index: 1;
+        }
+
+        .hero-headline em {
+            color: var(--gold-light);
+            font-style: italic;
+        }
+
+        .hero-sub {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 1.05rem;
+            text-align: center;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        /* Thailand Card */
+        .packages-strip {
+            padding: 70px 6vw 100px;
+            background: var(--darker);
+        }
+
+        .strip-label {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .strip-label::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--gold);
+            margin-top: 10px;
+            border-radius: 2px;
+        }
+
+        .pkg-card {
+            width: 100%;
+            max-width: 820px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            transition: transform 0.4s cubic-bezier(.17, .67, .38, 1.2), box-shadow 0.4s;
+        }
+
+        .pkg-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.75);
+        }
+
+        .pkg-card img {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.75);
+            transition: filter 0.4s, transform 0.6s;
+        }
+
+        .pkg-card:hover img {
+            filter: brightness(0.9);
+            transform: scale(1.04);
+        }
+
+        .pkg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(8, 12, 17, 0.92) 0%, rgba(8, 12, 17, 0.1) 55%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+        }
+
+        .pkg-tag {
+            display: inline-block;
+            background: var(--gold);
+            color: #000;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            width: fit-content;
+        }
+
+        .pkg-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+
+        .pkg-desc {
+            color: rgba(240, 234, 214, 0.7);
+            font-size: 0.95rem;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .pkg-cta {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gold);
+            color: #000;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 12px 26px;
+            border-radius: 30px;
+            width: fit-content;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .pkg-cta:hover {
+            background: var(--gold-light);
+            transform: translateX(4px);
+        }
+
+        .pkg-cta svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ── ABOUT PAGE ── */
+        .page-hero {
+            height: 40vh;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 8vw 50px;
+            background: linear-gradient(135deg, #080C11 0%, #0f1b24 100%);
+            margin-top: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 80% 30%, rgba(201, 151, 42, 0.09) 0%, transparent 60%);
+        }
+
+        .page-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            position: relative;
+        }
+
+        .page-hero h1 span {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .content-section {
+            padding: 80px 8vw;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        @media(max-width:700px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .about-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+        }
+
+        .about-text p {
+            color: var(--muted);
+            line-height: 1.85;
+            margin-bottom: 16px;
+            font-size: 0.97rem;
+        }
+
+        .stat-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(201, 151, 42, 0.15);
+            border-radius: 16px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item strong {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.6rem;
+            color: var(--gold-light);
+        }
+
+        .stat-item span {
+            color: var(--muted);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        /* ── VISION PAGE ── */
+        .vision-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            padding: 60px 8vw;
+        }
+
+        .v-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(201, 151, 42, 0.12);
+            border-radius: 16px;
+            padding: 36px 28px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .v-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-6px);
+        }
+
+        .v-icon {
+            font-size: 2.4rem;
+            margin-bottom: 18px;
+        }
+
+        .v-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--gold-light);
+            margin-bottom: 12px;
+        }
+
+        .v-card p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.75;
+        }
+
+        /* ── PACKAGES PAGE ── */
+        .pkg-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
+            padding: 60px 8vw;
+        }
+
+        .pkg-thumb {
+            background: var(--card-bg);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: transform 0.35s, box-shadow 0.35s;
+            cursor: pointer;
+        }
+
+        .pkg-thumb:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .pkg-thumb img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .pkg-thumb-body {
+            padding: 22px;
+        }
+
+        .pkg-thumb-body h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .pkg-thumb-body p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .pkg-price {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .pkg-price span {
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 400;
+        }
+
+        /* ── CONTACT PAGE ── */
+        .contact-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 60px;
+            padding: 60px 8vw;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media(max-width:700px) {
+            .contact-wrap {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contact-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold-light);
+            margin-bottom: 24px;
+        }
+
+        .contact-info p {
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 0.93rem;
+            margin-bottom: 28px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .info-row .ico {
+            font-size: 1.4rem;
+        }
+
+        .info-row div span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .info-row div strong {
+            font-size: 0.93rem;
+            color: var(--text);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        form input,
+        form textarea,
+        form select {
+            background: var(--card-bg);
+            border: 1px solid rgba(201, 151, 42, 0.18);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.93rem;
+            padding: 14px 18px;
+            outline: none;
+            transition: border-color 0.25s;
+        }
+
+        form input:focus,
+        form textarea:focus {
+            border-color: var(--gold);
+        }
+
+        form textarea {
+            height: 130px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 15px 34px;
+            border-radius: 30px;
+            cursor: pointer;
+            width: fit-content;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        /* ── BLOG PAGE ── */
+        #blog-page {
+            padding-top: 70px;
+            min-height: 100vh;
+            background: var(--darker);
+        }
+
+        .blog-banner {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.65);
+        }
+
+        .blog-banner-wrap {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-banner-wrap::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to top, var(--darker), transparent);
+        }
+
+        .blog-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 6vw 100px;
+        }
+
+        .blog-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gold);
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 40px;
+            text-decoration: none;
+            transition: gap 0.2s;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+
+        .blog-back:hover {
+            gap: 12px;
+        }
+
+        .blog-tag {
+            background: rgba(201, 151, 42, 0.15);
+            color: var(--gold);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .blog-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4.5vw, 3.4rem);
+            line-height: 1.15;
+            margin-bottom: 18px;
+        }
+
+        .blog-meta {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 50px;
+        }
+
+        .blog-body h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.55rem;
+            color: var(--gold-light);
+            margin: 40px 0 16px;
+        }
+
+        .blog-body p {
+            color: rgba(240, 234, 214, 0.75);
+            line-height: 1.9;
+            font-size: 1rem;
+            margin-bottom: 18px;
+        }
+
+        .highlight-box {
+            background: var(--card-bg);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 12px 12px 0;
+            padding: 22px 28px;
+            margin: 32px 0;
+            font-style: italic;
+            color: var(--text);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 30px 0;
+        }
+
+        @media(max-width:500px) {
+            .places-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .place-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(201, 151, 42, 0.1);
+        }
+
+        .place-item strong {
+            color: var(--gold-light);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .place-item span {
+            color: var(--muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .pkg-book-cta {
+            margin-top: 60px;
+            background: var(--card-bg);
+            border: 1px solid rgba(201, 151, 42, 0.25);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .pkg-book-cta h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+        }
+
+        .pkg-book-cta p {
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        .pkg-book-cta button {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 16px 42px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .pkg-book-cta button:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            border-top: 1px solid rgba(201, 151, 42, 0.1);
+            text-align: center;
+            padding: 30px;
+            color: var(--muted);
+            font-size: 0.82rem;
+            letter-spacing: 0.5px;
+        }
+
+        footer span {
+            color: var(--gold);
+        }
+
+        /* Success toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gold);
+            color: #000;
+            padding: 14px 26px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo" onclick="showPage('home')">Trip<span>Travvy</span></div>
+        <ul class="nav-links">
+            <li><a onclick="showPage('about')" id="nav-about">About Company</a></li>
+            <li><a onclick="showPage('vision')" id="nav-vision">Our Visions & Goals</a></li>
+            <li><a onclick="showPage('packages')" id="nav-packages">Packages</a></li>
+            <li><a onclick="showPage('contact')" id="nav-contact">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- ═══════════════ HOME PAGE ═══════════════ -->
+    <div id="page-home" class="page active">
+        <section class="hero">
+            <h1 class="hero-headline">Discover the World<br>with <em>Confidence</em></h1>
+            <p class="hero-sub">Curated travel experiences · Hassle-free itineraries · Unforgettable memories</p>
+        </section>
+
+        <section class="packages-strip">
+            <h2 class="strip-label">Featured Destination</h2>
+            <!-- THAILAND CARD — click opens blog -->
+            <div class="pkg-card" onclick="showBlog()">
+                <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1200&q=80"
+                    alt="Thailand – Land of Smiles"
+                    onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80'" />
+                <div class="pkg-overlay">
+                    <span class="pkg-tag">🔥 Trending</span>
+                    <div class="pkg-title">Thailand – Land of Smiles 🇹🇭</div>
+                    <p class="pkg-desc">Turquoise waters, gilded temples, vibrant street food & rooftop nightlife.
+                        Thailand has it all — explore our curated 7-night package.</p>
+                    <div class="pkg-cta">
+                        Read Full Package
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
+    </div>
+
+    <!-- ═══════════════ ABOUT PAGE ═══════════════ -->
+    <div id="page-about" class="page">
+        <div class="page-hero">
+            <h1>About <span>TripTravvy</span></h1>
+        </div>
+        <div class="content-section">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>Who We Are</h2>
+                    <p>TripTravvy is a premium travel company founded with a simple belief — every journey should be
+                        extraordinary. Based in India and serving clients across the globe, we craft handpicked travel
+                        experiences that blend adventure, culture, and comfort.</p>
+                    <p>From the temples of Thailand to the canals of Venice, our expert team designs trips that go
+                        beyond the ordinary tourist trail. We believe travel is not just a vacation — it is a
+                        transformation.</p>
+                    <p>With a passion for exploration and a deep commitment to customer satisfaction, TripTravvy has
+                        helped thousands of travelers create memories that last a lifetime.</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-item"><strong>5000+</strong><span>Happy Travelers</span></div>
+                    <div class="stat-item"><strong>40+</strong><span>Destinations</span></div>
+                    <div class="stat-item"><strong>8+</strong><span>Years Experience</span></div>
+                    <div class="stat-item"><strong>4.9★</strong><span>Average Rating</span></div>
+                </div>
+            </div>
+        </div>
+        <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
+    </div>
+
+    <!-- ═══════════════ VISION PAGE ═══════════════ -->
+    <div id="page-vision" class="page">
+        <div class="page-hero">
+            <h1>Our <span>Vision & Goals</span></h1>
+        </div>
+        <div class="vision-cards">
+            <div class="v-card">
+                <div class="v-icon">🌍</div>
+                <h3>Our Vision</h3>
+                <p>To become India's most trusted and innovative travel brand — making world-class travel accessible to
+                    every Indian family, couple, and solo explorer.</p>
+            </div>
+            <div class="v-card">
+                <div class="v-icon">🎯</div>
+                <h3>Our Mission</h3>
+                <p>To design personalized, stress-free travel experiences that exceed expectations — from the first
+                    enquiry to the final flight home.</p>
+            </div>
+            <div class="v-card">
+                <div class="v-icon">🤝</div>
+                <h3>Customer First</h3>
+                <p>We treat every traveler like family. Your dream, your pace, your way — our job is simply to make it
+                    happen flawlessly.</p>
+            </div>
+            <div class="v-card">
+                <div class="v-icon">♻️</div>
+                <h3>Sustainable Travel</h3>
+                <p>We are committed to responsible tourism — partnering with eco-friendly hotels, promoting local
+                    cultures, and reducing travel carbon footprints.</p>
+            </div>
+            <div class="v-card">
+                <div class="v-icon">💡</div>
+                <h3>Innovation</h3>
+                <p>Constantly evolving our technology and service model to deliver the smoothest, most transparent
+                    booking experience in the industry.</p>
+            </div>
+            <div class="v-card">
+                <div class="v-icon">🏆</div>
+                <h3>Excellence</h3>
+                <p>Our goal is not just satisfied customers — it's raving fans who recommend TripTravvy to everyone they
+                    know.</p>
+            </div>
+        </div>
+        <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
+    </div>
+
+    <!-- ═══════════════ PACKAGES PAGE ═══════════════ -->
+    <div id="page-packages" class="page">
+        <div class="page-hero">
+            <h1>Our <span>Packages</span></h1>
+        </div>
+        <div class="pkg-grid">
+            <div class="pkg-thumb" onclick="showBlog()">
+                <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=600&q=80" alt="Thailand"
+                    onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80'" />
+                <div class="pkg-thumb-body">
+                    <h3>Thailand Explorer 🇹🇭</h3>
+                    <p>Bangkok · Phuket · Krabi · Phi Phi Islands — 7 nights of pure bliss.</p>
+                    <div class="pkg-price">₹45,999 <span>/ person</span></div>
+                </div>
+            </div>
+            <div class="pkg-thumb">
+                <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" alt="Bali" />
+                <div class="pkg-thumb-body">
+                    <h3>Bali Bliss 🇮🇩</h3>
+                    <p>Rice terraces, temples, surf & spa — Bali awaits you in 6 nights.</p>
+                    <div class="pkg-price">₹52,499 <span>/ person</span></div>
+                </div>
+            </div>
+            <div class="pkg-thumb">
+                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&q=80" alt="Dubai"
+                    onerror="this.src='https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80'" />
+                <div class="pkg-thumb-body">
+                    <h3>Dubai Luxe 🇦🇪</h3>
+                    <p>Desert safaris, world's tallest buildings & luxury malls — 5 nights.</p>
+                    <div class="pkg-price">₹62,000 <span>/ person</span></div>
+                </div>
+            </div>
+            <div class="pkg-thumb">
+                <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&q=80" alt="Maldives" />
+                <div class="pkg-thumb-body">
+                    <h3>Maldives Escape 🇲🇻</h3>
+                    <p>Overwater bungalows, crystal lagoons & world-class snorkeling — 5 nights.</p>
+                    <div class="pkg-price">₹95,000 <span>/ person</span></div>
+                </div>
+            </div>
+            <div class="pkg-thumb">
+                <img src="https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=600&q=80" alt="Europe" />
+                <div class="pkg-thumb-body">
+                    <h3>Europe Grand Tour 🇪🇺</h3>
+                    <p>Paris · Rome · Amsterdam · Barcelona — 12 nights across 4 countries.</p>
+                    <div class="pkg-price">₹1,89,000 <span>/ person</span></div>
+                </div>
+            </div>
+            <div class="pkg-thumb">
+                <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&q=80" alt="Singapore" />
+                <div class="pkg-thumb-body">
+                    <h3>Singapore Spark 🇸🇬</h3>
+                    <p>Gardens by the Bay, Universal Studios & hawker street food — 5 nights.</p>
+                    <div class="pkg-price">₹68,500 <span>/ person</span></div>
+                </div>
+            </div>
+        </div>
+        <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
+    </div>
+
+    <!-- ═══════════════ CONTACT PAGE ═══════════════ -->
+<div id="page-contact" class="page">
+  <div class="page-hero">
+    <h1>Contact <span>Us</span></h1>
+  </div>
+
+  <div class="contact-wrap">
+
+    <!-- LEFT SIDE -->
+    <div class="contact-info">
+      <h3>Let's Plan Your Dream Trip</h3>
+      <p>Have a destination in mind? Want a custom package? Our travel experts are ready to help you — just reach out!</p>
+
+      <div class="info-row"><span class="ico">📍</span><div><span>Address</span><strong>Mumbai, Maharashtra, India</strong></div></div>
+      <div class="info-row"><span class="ico">📞</span><div><span>Phone</span><strong>+91 98765 43210</strong></div></div>
+      <div class="info-row"><span class="ico">📧</span><div><span>Email</span><strong>hello@triptravvy.in</strong></div></div>
+      <div class="info-row"><span class="ico">🌐</span><div><span>Website</span><strong>www.triptravvy.in</strong></div></div>
+    </div>
+
+    <!-- ✅ FIXED FORM -->
+    <form onsubmit="submitForm(event)">
+      <input type="text" placeholder="Your Full Name" required />
+      <input type="email" placeholder="Your Email Address" required />
+      <input type="tel" placeholder="Your Phone Number" />
+      <input type="text" placeholder="Interested Destination (e.g. Thailand)" />
+      <textarea placeholder="Tell us about your travel plans…"></textarea>
+      <button type="submit" class="btn-submit">Send Enquiry ✈️</button>
+    </form>
+
+  </div>
+
+  <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
+</div>
+
+    <!-- ═══════════════ BLOG PAGE ═══════════════ -->
+    <div id="blog-page" class="page">
+        <div class="blog-banner-wrap">
+            <img class="blog-banner" src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=1400&q=85"
+                alt="Thailand"
+                onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=85'" />
+        </div>
+        <div class="blog-content">
+            <button class="blog-back" onclick="showPage('home')">
+                ← Back to Home
+            </button>
+            <span class="blog-tag">🇹🇭 Thailand Package</span>
+            <h1 class="blog-title">Thailand — The Ultimate 7-Night Dream Package</h1>
+            <p class="blog-meta">By TripTravvy Travel Team &nbsp;·&nbsp; 7 Nights / 8 Days &nbsp;·&nbsp; Starting
+                ₹45,999 per person</p>
+
+            <div class="blog-body">
+                <p>Thailand is not just a destination — it is a feeling. From the golden spires of Bangkok's temples to
+                    the crystal-clear waters of Krabi, this country blends ancient culture with modern luxury like
+                    nowhere else on Earth. Our 7-night Thailand package is designed to give you the perfect taste of it
+                    all.</p>
+
+                <div class="highlight-box">
+                    "Thailand was always on my bucket list, but TripTravvy made it feel effortless. Every hotel, every
+                    transfer, every experience was perfectly arranged." — Priya & Rahul, Mumbai
+                </div>
+
+                <h2>✈️ Package Highlights</h2>
+                <p>Our Thailand package covers the best of Bangkok, Phuket, Krabi and the iconic Phi Phi Islands. You
+                    get 7 nights of handpicked hotel accommodation, daily breakfast, airport transfers, a sunset boat
+                    cruise, island-hopping tour, and a local SIM card — everything done for you.</p>
+
+                <h2>📍 Places You'll Explore</h2>
+                <div class="places-grid">
+                    <div class="place-item"><strong>🏙️ Bangkok</strong><span>Grand Palace, Wat Pho, Chatuchak Night
+                            Market & rooftop bar views of the skyline</span></div>
+                    <div class="place-item"><strong>🏝️ Phuket</strong><span>Patong Beach, Big Buddha, Bangla Road
+                            nightlife & world-famous seafood</span></div>
+                    <div class="place-item"><strong>🌊 Krabi</strong><span>Four Islands tour, Railay Beach (reachable
+                            only by boat), limestone karsts</span></div>
+                    <div class="place-item"><strong>⛵ Phi Phi Islands</strong><span>Maya Bay (inspired The Beach film),
+                            snorkeling, cliff jumping & bioluminescent waters at night</span></div>
+                </div>
+
+                <h2>🗓️ Day-by-Day Itinerary</h2>
+                <p><strong style="color:var(--gold-light)">Day 1:</strong> Arrive Bangkok → Hotel check-in → Welcome
+                    dinner at Asiatique floating market</p>
+                <p><strong style="color:var(--gold-light)">Day 2:</strong> Grand Palace & Wat Pho temple tour → Chao
+                    Phraya River cruise → Street food evening</p>
+                <p><strong style="color:var(--gold-light)">Day 3:</strong> Flight to Phuket → Patong Beach afternoon →
+                    Bangla Road at night</p>
+                <p><strong style="color:var(--gold-light)">Day 4:</strong> Full-day Phi Phi Islands speedboat tour →
+                    Snorkeling at Maya Bay</p>
+                <p><strong style="color:var(--gold-light)">Day 5:</strong> Transfer to Krabi → Railay Beach → Sunset
+                    kayaking</p>
+                <p><strong style="color:var(--gold-light)">Day 6:</strong> Four Islands half-day tour → Tiger Cave
+                    Temple hike → Evening free</p>
+                <p><strong style="color:var(--gold-light)">Day 7:</strong> Leisure morning → Spa session → Farewell
+                    dinner</p>
+                <p><strong style="color:var(--gold-light)">Day 8:</strong> Airport drop-off → Fly home with the best
+                    memories of your life</p>
+
+                <h2>💰 What's Included</h2>
+                <p>✅ 7 nights hotel accommodation (3-star / 4-star options available) · ✅ Daily breakfast · ✅ All
+                    airport & inter-city transfers · ✅ Phi Phi Islands speedboat tour · ✅ Four Islands tour (Krabi) · ✅
+                    Local Thailand SIM card · ✅ 24x7 TripTravvy support on WhatsApp</p>
+
+                <h2>❌ What's Not Included</h2>
+                <p>International airfare · Lunch & dinner (unless specified) · Personal shopping · Travel insurance
+                    (recommended — available at extra cost)</p>
+            </div>
+
+            <div class="pkg-book-cta">
+                <h3>Ready to Book Your Thailand Trip?</h3>
+                <p>Spots are limited for our upcoming departures. Talk to our experts today and lock in your dates!</p>
+                <button onclick="showPage('contact')">Book Now — ₹45,999 Onwards</button>
+            </div>
+        </div>
+        <footer>&copy; 2025 <span>TripTravvy</span> · www.triptravvy.in · All Rights Reserved</footer>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">✅ Enquiry sent! We'll call you soon.</div>
+
+    <script>
+        const pages = ['home', 'about', 'vision', 'packages', 'contact'];
+        const navIds = ['nav-about', 'nav-vision', 'nav-packages', 'nav-contact'];
+        const navPages = ['about', 'vision', 'packages', 'contact'];
+
+        function showPage(name) {
+            // hide all
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('blog-page').classList.remove('active');
+            // show target
+            const el = document.getElementById('page-' + name) || document.getElementById(name + '-page');
+            if (el) el.classList.add('active');
+            // update nav
+            navIds.forEach((id, i) => {
+                document.getElementById(id).classList.toggle('active', navPages[i] === name);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showBlog() {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('blog-page').classList.add('active');
+            navIds.forEach(id => document.getElementById(id).classList.remove('active'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+       async function submitForm(e) {
+  e.preventDefault();
+
+  const inputs = e.target.querySelectorAll("input, textarea");
+
+  const data = {
+    name: inputs[0].value,
+    email: inputs[1].value,
+    phone: inputs[2].value,
+    destination: inputs[3].value,
+    message: inputs[4].value
+  };
+
+  try {
+    const res = await fetch("http://localhost:5000/api/enquiry", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const toast = document.getElementById('toast');
+    toast.innerText = "✅ Enquiry sent successfully!";
+    toast.classList.add('show');
+
+    setTimeout(() => toast.classList.remove('show'), 3000);
+    e.target.reset();
+
+  } catch (err) {
+    alert("❌ Error sending enquiry");
+  }
+}
+
+        
+    </script>
+</body>
+
+</html>
